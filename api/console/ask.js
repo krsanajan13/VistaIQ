@@ -105,7 +105,7 @@ module.exports = async (req, res) => {
     } else if (generatedSql.includes('footfall')) {
       const totalOT = rows.find(r => r.District === 'Old Town')?.Total_Visitors || 0;
       const totalAQ = rows.find(r => r.District === 'Artisan Quarter')?.Total_Visitors || 0;
-      summaryText = `Total footfall is heavily concentrated in the **Old Town (approx ${window ? '' : Math.round(totalOT/1000)}K)**, while the **Artisan Quarter has only ${window ? '' : Math.round(totalAQ/1000)}K**. This represents a significant demand imbalance.`;
+      summaryText = `Total footfall is heavily concentrated in the **Old Town (approx ${Math.round(totalOT / 1000)}K)**, while the **Artisan Quarter has only ${Math.round(totalAQ / 1000)}K**. This represents a significant demand imbalance.`;
       chartType = "bar";
       chartTitle = "Visitor Footfall distribution";
     } else if (generatedSql.includes('spend')) {
@@ -117,7 +117,7 @@ module.exports = async (req, res) => {
       chartType = "bar";
       chartTitle = "Average Business Ratings";
     } else {
-      summaryText = `Successfully executed query. Retreived **${rows.length} rows** from the database.`;
+      summaryText = `Successfully executed query. Retrieved **${rows.length} rows** from the database.`;
       chartType = rows.length > 1 ? "bar" : "none";
     }
 

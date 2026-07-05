@@ -104,12 +104,18 @@ ${JSON.stringify(eventRows)}
 Write a professional explanation. If there is rain/snow/wind and a drop, attribute it to bad weather. If there is a scheduled critical/high impact festival and a huge spike, attribute it to the event. If there was a storm during a scheduled festival, note how bad weather suppressed the expected event impact.
 `;
 
-      const aiCorrelation = await generateStructured(
-        "Correlate and explain the root cause.",
-        anomalySystemInstruction,
-        anomalyPromptSchema,
-        apiKey
-      );
+      let aiCorrelation;
+      try {
+        aiCorrelation = await generateStructured(
+          "Correlate and explain the root cause.",
+          anomalySystemInstruction,
+          anomalyPromptSchema,
+          apiKey
+        );
+      } catch (geminiError) {
+        console.warn("Gemini anomaly explanation failed, using local correlation fallback:", geminiError.message);
+        aiCorrelation = buildLocalAnomalyExplanation(anom, weatherRows, eventRows);
+      }
 
       explainedAnomalies.push({
         district: anom.district,
@@ -140,3 +146,35 @@ Write a professional explanation. If there is rain/snow/wind and a drop, attribu
     });
   }
 };
+
+function buildLocalAnomalyExplanation(anom, weatherRows, eventRows) {
+  const severeWeather = weatherRows.find(w => ['Rainy', 'Snowy', 'Windy'].includes(w.condition));
+  const majorEvent = eventRows.find(e => ['High', 'Critical'].includes(e.expected_impact));
+  const isDrop = anom.max_deviation < 0;
+
+  if (isDrop && severeWeather && majorEvent) {
+    return {
+      explanation: `${anom.district} saw a ${Math.abs(anom.max_deviation)}% demand drop while ${severeWeather.condition.toLowerCase()} weather overlapped with ${majorEvent.event_name}, likely suppressing expected event footfall.`,
+      contributing_factors: [severeWeather.condition, 'Event Disruption', 'Demand Drop']
+    };
+  }
+
+  if (isDrop && severeWeather) {
+    return {
+      explanation: `${anom.district} saw a ${Math.abs(anom.max_deviation)}% demand drop during ${severeWeather.condition.toLowerCase()} weather, suggesting visitors avoided the district during poor travel conditions.`,
+      contributing_factors: [severeWeather.condition, 'Weather Sensitivity', 'Demand Drop']
+    };
+  }
+
+  if (!isDrop && majorEvent) {
+    return {
+      explanation: `${anom.district} saw a ${Math.abs(anom.max_deviation)}% demand surge during ${majorEvent.event_name}, matching the scheduled ${majorEvent.expected_impact.toLowerCase()}-impact event window.`,
+      contributing_factors: [majorEvent.event_name, 'Event Spike', 'Demand Surge']
+    };
+  }
+
+  return {
+    explanation: `${anom.district} deviated by ${Math.abs(anom.max_deviation)}% from its rolling baseline. No single event or severe weather factor fully explains the movement, so this should be reviewed manually.`,
+    contributing_factors: ['Statistical Deviation', 'Manual Review']
+  };
+}
