@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VistaIQ — AI Decision Intelligence Platform</title>
+  <meta name="description" content="VistaIQ closes the loop between tourism analytics and automated visitor recommendations to support local economic development.">
+  
+  <!-- SEO / Open Graph -->
+  <meta property="og:title" content="VistaIQ — AI Decision Intelligence Platform">
+  <meta property="og:description" content="Tackling overtourism and driving local spend via Gemini-powered analytics and concierge routing.">
+  <meta property="og:type" content="website">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+
+  <!-- Chart.js, Marked (Markdown Parsing) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <a href="#console" class="header-logo" id="logoLink">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="url(#logoGrad)" />
+            <path d="M9 16C9 12.134 12.134 9 16 9C19.866 9 23 12.134 23 16C23 19.866 19.866 23 16 23" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M16 13L19 16L16 19" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ff6b6b" />
+                <stop offset="1" stop-color="#4ecdc4" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="header-logo-text text-gradient">VistaIQ</span>
+        </a>
+        <div class="header-tagline">Decision Intelligence Platform</div>
+      </div>
+
+      <div class="header-right">
+        <!-- Navigation Tabs -->
+        <nav class="tab-nav">
+          <button class="tab-btn active" data-tab="console" id="btnTabConsole">
+            <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+            </svg>
+            <span>Decision Console</span>
+          </button>
+          <button class="tab-btn" data-tab="concierge" id="btnTabConcierge">
+            <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            <span>AI Concierge</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      
+      <!-- ==============================================
+           DECISION CONSOLE PANEL
+           ============================================== -->
+      <section id="consolePanel" class="tab-panel active">
+        <div class="console-layout stagger animate-fade-in-up">
+          
+          <div class="section-header">
+            <h1 class="section-title">Decision Console</h1>
+            <p class="section-subtitle">Query real-time mobility metrics, explore economic anomalies, and generate predictive forecasts for Rivermouth's districts.</p>
+          </div>
+
+          <!-- Ask Anything Input Section -->
+          <div class="console-input-section">
+            <div class="glass-card">
+              <h3 style="margin-bottom: var(--space-3);">Conversational Analytics</h3>
+              <div class="ask-bar">
+                <svg class="input-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" id="consoleQuestionInput" class="input input-search" placeholder="Ask anything about footfall, spend, reviews, or events..." autocomplete="off">
+                <button id="consoleSubmitBtn" class="btn btn-teal input-search-submit">Run Query</button>
+              </div>
+
+              <div class="example-questions">
+                <span class="example-question" data-question="Show visitor footfall by district for the last 3 months.">Footfall by district</span>
+                <span class="example-question" data-question="Compare total transaction amounts by business category.">Spend by category</span>
+                <span class="example-question" data-question="Which businesses have the lowest ratings and what is their district?">Underperforming businesses</span>
+                <span class="example-question" data-question="What was the footfall trend during the Harbor District summer festival?">Festival footfall impact</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Panels: Forecast & Anomaly -->
+          <div class="console-quick-actions">
+            <div class="glass-card glass-card--interactive quick-action-card" id="quickActionForecast">
+              <div class="quick-action-icon quick-action-icon--forecast">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="quick-action-title">District Forecasting</h4>
+                <p class="quick-action-desc">Project footfall and transaction volume forward up to 90 days based on historical trends.</p>
+              </div>
+            </div>
+
+            <div class="glass-card glass-card--interactive quick-action-card" id="quickActionAnomaly">
+              <div class="quick-action-icon quick-action-icon--anomaly">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="quick-action-title">Anomaly Detection</h4>
+                <p class="quick-action-desc">Scan the data to flag sudden drops/spikes and check Gemini-correlated root causes.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Results Container -->
+          <div id="consoleResultsSection" class="console-results-section" style="display: none;">
+            <!-- Main Response Card -->
+            <div class="glass-card answer-card">
+              <div class="section-header" style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <span class="badge badge-teal" style="margin-bottom: var(--space-2);">Analytics Insight</span>
+                  <h3 id="consoleAnswerHeading">Analysis Results</h3>
+                </div>
+                <button class="btn btn-ghost btn-sm" id="closeConsoleResultsBtn">✕ Close</button>
+              </div>
+
+              <!-- Loader skeleton (initially hidden) -->
+              <div id="consoleLoader" class="stagger" style="display: none;">
+                <div class="skeleton skeleton-heading"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text" style="width: 70%;"></div>
+                <div class="skeleton skeleton-chart" style="margin-top: var(--space-4);"></div>
+              </div>
+
+              <!-- Main Content wrapper -->
+              <div id="consoleOutputContent">
+                <div id="consoleTextAnswer" class="answer-text"></div>
+                
+                <!-- Chart Rendering Canvas -->
+                <div id="consoleChartWrapper" class="chart-container" style="display: none;">
+                  <h4 class="chart-title" id="consoleChartTitle">Chart View</h4>
+                  <canvas id="consoleChartCanvas"></canvas>
+                </div>
+
+                <!-- Generated SQL Expandable Panel -->
+                <div class="expandable" style="margin-top: var(--space-4);">
+                  <div class="expandable-header" id="sqlExpandBtn">
+                    <span class="expandable-title">
+                      <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                      </svg>
+                      Generated SQL Statement
+                    </span>
+                    <svg class="expandable-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                  <div class="expandable-content">
+                    <div class="expandable-body">
+                      <div class="sql-viewer">
+                        <code id="sqlStatementText">SELECT * FROM ...</code>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Explainability Panel (Why this answer) -->
+                <div id="consoleExplainabilityPlaceholder"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Forecast Mode Panel -->
+          <div id="consoleForecastSection" class="glass-card" style="display: none;">
+            <div class="section-header" style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <span class="badge badge-teal" style="margin-bottom: var(--space-2);">Predictive Forecasting</span>
+                <h2>District Demand Forecasts</h2>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="closeForecastBtn">✕ Back</button>
+            </div>
+
+            <div class="forecast-controls">
+              <div class="input-group">
+                <label class="input-label" for="forecastDistrictSelect">District</label>
+                <select id="forecastDistrictSelect" class="select">
+                  <option value="Old Town">Old Town</option>
+                  <option value="Harbor">Harbor</option>
+                  <option value="Artisan Quarter">Artisan Quarter</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label class="input-label" for="forecastMetricSelect">Metric</label>
+                <select id="forecastMetricSelect" class="select">
+                  <option value="footfall">Footfall (Visitors)</option>
+                  <option value="spend">Spend ($ Transaction Volume)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label class="input-label" for="forecastDaysSelect">Horizon</label>
+                <select id="forecastDaysSelect" class="select">
+                  <option value="30">Next 30 Days</option>
+                  <option value="60">Next 60 Days</option>
+                  <option value="90">Next 90 Days</option>
+                </select>
+              </div>
+
+              <button class="btn btn-primary" id="runForecastBtn">Compute Forecast</button>
+            </div>
+
+            <!-- Loader for Forecast -->
+            <div id="forecastLoader" class="skeleton skeleton-chart" style="display: none; margin-top: var(--space-4);"></div>
+
+            <!-- Forecast Output -->
+            <div id="forecastOutputContent" style="display: none;">
+              <div class="chart-container">
+                <canvas id="forecastChartCanvas"></canvas>
+              </div>
+              <div id="forecastSummaryText" class="answer-text" style="margin-top: var(--space-4);"></div>
+              <div id="forecastExplainabilityPlaceholder"></div>
+            </div>
+          </div>
+
+          <!-- Anomaly Detection Mode Panel -->
+          <div id="consoleAnomalySection" class="glass-card" style="display: none;">
+            <div class="section-header" style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <span class="badge badge-coral" style="margin-bottom: var(--space-2);">Anomaly Scanner</span>
+                <h2>Identified Data Anomalies</h2>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="closeAnomalyBtn">✕ Back</button>
+            </div>
+
+            <div class="forecast-controls">
+              <div class="input-group">
+                <label class="input-label" for="anomalyDistrictFilter">Filter District</label>
+                <select id="anomalyDistrictFilter" class="select">
+                  <option value="All">All Districts</option>
+                  <option value="Old Town">Old Town</option>
+                  <option value="Harbor">Harbor</option>
+                  <option value="Artisan Quarter">Artisan Quarter</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" id="runAnomalyScanBtn">Run Scanner</button>
+            </div>
+
+            <!-- Loader for Anomaly -->
+            <div id="anomalyLoader" class="stagger" style="display: none; margin-top: var(--space-4);">
+              <div class="skeleton skeleton-heading" style="width: 30%;"></div>
+              <div class="skeleton skeleton-text"></div>
+              <div class="skeleton skeleton-text" style="width: 80%;"></div>
+            </div>
+
+            <!-- Anomaly Output Cards -->
+            <div id="anomalyOutputContent" style="display: none; flex-direction: column; gap: var(--space-4); margin-top: var(--space-4);">
+              <div id="anomalyCardsContainer"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==============================================
+           AI CONCIERGE PANEL
+           ============================================== -->
+      <section id="conciergePanel" class="tab-panel">
+        <div class="concierge-layout stagger animate-fade-in-up">
+          
+          <!-- Sidebar Form for Trip Config -->
+          <div class="concierge-sidebar glass-card">
+            <div style="margin-bottom: var(--space-5);">
+              <span class="badge badge-gold" style="margin-bottom: var(--space-2);">Impact Concierge</span>
+              <h2>Itinerary Planner</h2>
+              <p class="text-muted" style="font-size: var(--text-sm);">Plan trips grounded in real data, dynamically adjusted to balance footfall and support local crafts.</p>
+            </div>
+
+            <form id="tripForm" class="trip-form" onsubmit="return false;">
+              <!-- Days Selector -->
+              <div class="trip-form-section">
+                <label class="trip-form-label">
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  Duration of Stay
+                </label>
+                <div class="days-value" id="daysValueDisplay">2 Days</div>
+                <input type="range" id="daysInput" class="range-input" min="1" max="5" value="2">
+              </div>
+
+              <!-- Budget selector -->
+              <div class="trip-form-section">
+                <label class="trip-form-label">
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Daily Budget Level
+                </label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" name="budget" id="budgetBudget" value="Budget" checked>
+                    <label for="budgetBudget">Economy ($25/d)</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" name="budget" id="budgetModerate" value="Moderate">
+                    <label for="budgetModerate">Standard ($75/d)</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" name="budget" id="budgetPremium" value="Premium">
+                    <label for="budgetPremium">Luxury ($150+/d)</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Crowd preference -->
+              <div class="trip-form-section">
+                <label class="trip-form-label">
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                  Crowd Tolerance
+                </label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" name="crowd" id="crowdAvoid" value="Avoid" checked>
+                    <label for="crowdAvoid">Avoid Hotspots</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" name="crowd" id="crowdNeutral" value="Neutral">
+                    <label for="crowdNeutral">Don't Mind</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" name="crowd" id="crowdBuzz" value="Buzz">
+                    <label for="crowdBuzz">Love the Buzz</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interests -->
+              <div class="trip-form-section">
+                <label class="trip-form-label">
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                  </svg>
+                  Areas of Interest
+                </label>
+                <div class="interest-chips" id="interestChipsContainer">
+                  <span class="interest-chip selected" data-value="Local Crafts"><span class="emoji">🎨</span> Local Crafts</span>
+                  <span class="interest-chip selected" data-value="Food & Drink"><span class="emoji">🍲</span> Food & Drink</span>
+                  <span class="interest-chip" data-value="History & Heritage"><span class="emoji">🏛️</span> History & Heritage</span>
+                  <span class="interest-chip" data-value="Nature & Outdoors"><span class="emoji">🌲</span> Nature & Outdoors</span>
+                  <span class="interest-chip" data-value="Nightlife"><span class="emoji">🎸</span> Nightlife</span>
+                  <span class="interest-chip" data-value="Art & Culture"><span class="emoji">🎭</span> Art & Culture</span>
+                </div>
+              </div>
+
+              <!-- Accessibility check -->
+              <div class="trip-form-section" style="flex-direction: row; align-items: center; gap: var(--space-2); cursor: pointer;">
+                <input type="checkbox" id="accessibilityCheckbox" style="cursor: pointer; width: 16px; height: 16px;">
+                <label for="accessibilityCheckbox" style="cursor: pointer; font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-secondary);">Require mobility assistance (flat paths)</label>
+              </div>
+
+              <button id="generateItineraryBtn" class="btn btn-teal btn-lg">Generate Itinerary</button>
+            </form>
+          </div>
+
+          <!-- Main Interactive View for Concierge Output -->
+          <div class="concierge-main">
+            <!-- Initial State Card -->
+            <div id="conciergeWelcomeCard" class="glass-card concierge-welcome">
+              <span class="concierge-welcome-icon">🗺️</span>
+              <h3>Ready to discover Rivermouth?</h3>
+              <p>Adjust your duration, budget, and interests in the planner tool to create a customized itinerary that targets hidden artisan shops alongside major sights.</p>
+            </div>
+
+            <!-- Loader for Concierge -->
+            <div id="conciergeLoader" class="glass-card stagger" style="display: none;">
+              <div class="section-header" style="margin-bottom: var(--space-4);">
+                <div class="skeleton skeleton-heading" style="width: 40%;"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text" style="width: 90%;"></div>
+              </div>
+              <div class="itinerary-stops" style="border-left: 2px dashed rgba(255,255,255,0.1);">
+                <div class="itinerary-stop">
+                  <div class="skeleton skeleton-chart" style="height: 120px; border-radius: var(--radius-lg);"></div>
+                </div>
+                <div class="itinerary-stop" style="margin-top: var(--space-4);">
+                  <div class="skeleton skeleton-chart" style="height: 120px; border-radius: var(--radius-lg);"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Output Container -->
+            <div id="conciergeOutputCard" class="glass-card" style="display: none;">
+              <div class="section-header" style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <span class="badge badge-gold" style="margin-bottom: var(--space-2);">Your Custom Trip</span>
+                  <h3 id="conciergeItineraryTitle">Rivermouth Itinerary</h3>
+                </div>
+                <button class="btn btn-ghost btn-sm" id="resetConciergeBtn">Reset</button>
+              </div>
+
+              <div id="itineraryContent" class="itinerary">
+                <!-- Day blocks will render here dynamically -->
+              </div>
+
+              <!-- Citations Section -->
+              <div class="citations">
+                <h4 class="citations-title">Sources & Citations</h4>
+                <div id="citationsContainer">
+                  <!-- Citations will render here dynamically -->
+                </div>
+              </div>
+
+              <!-- Explainability Panel (Why these picks) -->
+              <div id="conciergeExplainabilityPlaceholder"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div>VistaIQ Platform Proto &bull; Built with Gemini 2.0 & SQLite WASM &bull; hackathon-apac</div>
+    </footer>
+  </div>
+
+  <!-- API Key Setup Modal -->
+  <div id="apiKeyModal" class="modal-overlay active">
+    <div class="modal">
+      <h3 class="modal-title">Gemini API Key Required</h3>
+      <p class="modal-description">To run calculations, perform NL-to-SQL logic, and generate custom itineraries, please insert a Google Gemini API Key from Google AI Studio. This key is stored securely in your local browser session and never sent to any backend except directly to Google.</p>
+      
+      <div class="input-group" style="margin-bottom: var(--space-5);">
+        <label class="input-label" for="apiKeyInput">Google Gemini API Key</label>
+        <input type="password" id="apiKeyInput" class="input" placeholder="AIzaSy...">
+      </div>
+
+      <div style="display: flex; gap: var(--space-3); justify-content: flex-end;">
+        <button id="bypassDemoBtn" class="btn btn-secondary btn-sm" style="display: none;">Demo Mode</button>
+        <button id="submitApiKeyBtn" class="btn btn-teal">Save & Initialize</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification system -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- UI Logic Hooks -->
+  <script src="/js/shared/utils.js"></script>
+  <script src="/js/api-client.js"></script>
+  <script src="/js/shared/explainability-ui.js"></script>
+  <script src="/js/console/charts.js"></script>
+  <script src="/js/console/forecast-ui.js"></script>
+  <script src="/js/console/console-ui.js"></script>
+  <script src="/js/concierge/itinerary-renderer.js"></script>
+  <script src="/js/concierge/concierge-ui.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
