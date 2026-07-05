@@ -58,15 +58,14 @@ module.exports = async (req, res) => {
     // 2. Perform forecasting calculations
     const forecastResult = computeForecast(history, days);
 
-    // 3. Ask Gemini to write a summary analysis of the forecast
     const direction = forecastResult.slope > 0 ? "growth" : (forecastResult.slope < 0 ? "decline" : "stable");
     const metricLabel = metric === 'footfall' ? 'visitor footfall traffic' : 'retail/hospitality transaction spend';
-    
-    // Compile history boundaries and forecast boundaries
     const lastHistVal = history[history.length - 1].value;
     const finalProjVal = forecastResult.forecast[forecastResult.forecast.length - 1].value;
-    
-    const summaryPrompt = `
+
+    let geminiSummary = "";
+    try {
+      const summaryPrompt = `
 Analyze this mathematical forecast for tourism planning:
 District: "${district}"
 Metric: "${metricLabel}"
@@ -79,8 +78,12 @@ Final projected value at day ${days}: ${finalProjVal} (range: ${forecastResult.f
 Provide a brief, professional 2-3 sentence analysis of this trend for a city official. Highlight any seasonal peaks and suggest a brief planning recommendation.
 `;
 
-    const systemInstruction = "You are a senior tourism economics analyst writing executive summary briefs.";
-    const geminiSummary = await generateText(summaryPrompt, systemInstruction, apiKey);
+      const systemInstruction = "You are a senior tourism economics analyst writing executive summary briefs.";
+      geminiSummary = await generateText(summaryPrompt, systemInstruction, apiKey);
+    } catch (geminiError) {
+      console.warn("Gemini forecast summarization failed, using offline fallback summary:", geminiError.message);
+      geminiSummary = `The mathematical forecast projects a **${direction}** trend in **${metricLabel}** for the **${district}** district over the next **${days} days**. The baseline shows a daily slope change of **${forecastResult.slope}**. Regional coordinators should plan resources to handle this projection and direct overflow visitor traffic to underserved zones.`;
+    }
 
     return res.status(200).json({
       district,
@@ -92,7 +95,7 @@ Provide a brief, professional 2-3 sentence analysis of this trend for a city off
       summary: geminiSummary,
       explainability: {
         sources: [metric, 'businesses (for spend mappings)'],
-        confidence: 'high',
+        confidence: geminiSummary.includes('offline fallback') ? 'medium' : 'high',
         reasoning: `Fitted linear trend equation (slope: ${forecastResult.slope}) combined with weekday seasonality coefficients extracted from 365 days of historical data.`
       }
     });
@@ -100,7 +103,7 @@ Provide a brief, professional 2-3 sentence analysis of this trend for a city off
   } catch (error) {
     console.error("Forecasting endpoint error:", error);
     return res.status(500).json({ 
-      message: "Forecast computation or AI explanation generation failed.", 
+      message: "Forecast computation failed.", 
       error: error.message 
     });
   }
